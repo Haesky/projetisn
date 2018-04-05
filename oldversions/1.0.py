@@ -1,3 +1,5 @@
+# Version 1.0
+
 # Pris en charge de fond coloré, avec une ligne de surface.
 # Vue en 2D
 # Création du personnage
