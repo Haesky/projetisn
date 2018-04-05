@@ -1,3 +1,8 @@
+# Pris en charge de fond coloré, avec une ligne de surface.
+# Vue en 2D
+# Création du personnage
+# Saut non gravitationnel du personnage
+
 from tkinter import *
 import time
 import random
