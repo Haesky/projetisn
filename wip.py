@@ -14,15 +14,12 @@ colordecor = "#AB6300"
 
 # Position du décor
 pod1 = 450
-pod2 = 470
-pod3 = 460
+pod2 = 500
+pod3 = 475
 pod4 = 2
+pod5 = 3
+pod6 = 3
 
-# Position temporaire
-pot1 = -1
-pot2 = 19
-pot3 = 9
-pot4 = 123123
 
 # Vitesse de saut et hauteur par ailleurs
 inispeed = 8
@@ -31,7 +28,6 @@ speed = 8 #la valeur de speed sera changée, et on reviendra à inispeed.
 # Variables pour le saut, et l'activiation du décor (au clic droit)
 jumping = 0
 decoractive = False
-decortempactive = False
 
 # Variables a Emilien
 x_objet = 444
@@ -85,7 +81,7 @@ decor = canvas.create_polygon(pod1, 0, pod2, 0, pod3, 15, fill=colordecor)
 decortemp = canvas.create_polygon(0, 0, 0, 0, 0, 0, fill=colordecor)
 # #déplacement décor
 def decordef():
-    global decoractive, decortempactive, pod1, pod2, pod3
+    global decoractive, pod1, pod2, pod3
     if decoractive == True:
         if pod1 != 0:
             canvas.coords(decor, pod1, 0, pod2, 0, pod3, 15)
@@ -97,30 +93,7 @@ def decordef():
             pod1 = 450
             pod2 = 470
             pod3 = 460
-            pot1 = -1
-            pot2 = 19
-            pot3 = 9
-            decortempactive = True
-            canvas.after(10, decortempdef)
             canvas.after(10, decordef)
-
-# # déplacement décor temporaire
-def decortempdef():
-    global pot1, pot2, pot3, decortempactive
-    if decortempactive == True:
-        if pot3 != 0:
-            canvas.coords(decortemp, pot1, 0, pot2, 0, pot3, 15)
-            pot1 -= 1
-            pot2 -= 1
-            pot3 -= 1
-            canvas.after(10, decortempdef)
-        else:
-            pot1 = -1
-            pot2 = 19
-            pot3 = 9
-            decortempactive = False
-            canvas.coords(decortemp, 0, 0, 0, 0, 0, 0)
-            canvas.after(10, decortempdef)
 
 #clics et fonctions
 # #clic gauche (clickl : clickleft)
@@ -166,14 +139,13 @@ def doublefall():
 
 # #clic droit (clickr: clickright)
 def clickr(event):
-    global decoractive, decortempactive
-    if decortempactive == False:
-        if decoractive == False:
-            decoractive = True
-            decordef()
-        else:
-            decoractive = False
-            decordef()
+    global decoractive
+    if decoractive == False:
+        decoractive = True
+        decordef()
+    else:
+        decoractive = False
+        decordef()
 
 # # Mise en place des boutons de la souris pour faire les fonctions
 fenetre.bind("<space>", clickl)
