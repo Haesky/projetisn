@@ -14,6 +14,7 @@ y_objet = 140
 random_item = 0
 ## me permet de generer un type d'obstacle aleatoirement
 nombre_obstacles = 0
+dif = 2
 
 #sous-programmes
 def generation () :
@@ -30,6 +31,7 @@ def random_objet (): ## lancement du programme, generation du type d'obstacle
 
 
 def new_objet () :
+    global flag
     if random_item == 0 :
         obstacle.append(can1.create_line (210,150,217,140))
         obstacle.append(can1.create_line (217,140,224,150))
@@ -50,7 +52,9 @@ def new_objet () :
         obstacle.append(can1.create_line (220,140,220,150))
         obstacle.append(can1.create_line (209,140,215,130))
         obstacle.append(can1.create_line (215,130,221,140))
-    defillement()
+    if flag == 0:
+        defillement()
+        flag = 1
 
 def defillement ():
     global y_objet, x_objet
@@ -65,6 +69,7 @@ def defillement ():
 
 #main
 obstacle = []
+flag = 0
 can1.create_line (0, 150, 200, 150)
 generation()
 can1.pack()
