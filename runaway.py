@@ -299,7 +299,7 @@ bouton.pack()
 canvas.pack()
 
 #permet de définir la position (au-dessous ou au-dessus de l'élément spécifié)
-canvas.tag_raise(pnj, decor)
-canvas.tag_raise(pnj,ligne2)
+for i in range (1,17): 
+    canvas.tag_raise(pnj,i) #Ici, le personnage sera au-dessous de tous les éléments. (Sans compter les pièges)
 
 fenetre.mainloop()
