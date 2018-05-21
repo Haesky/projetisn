@@ -3,55 +3,54 @@ from time import *
 from random import *
 
 # Position du personnage
-pob1 = 20
+pob1 = 10
 pob2 = 135
-pob3 = 70
+pob3 = 60
 pob4 = 185
 
-# Couleur du dÃƒÆ’Ã‚Â©cor
+# Couleur du décor
 colordecor = "#AB6300"
 
-#DÃƒÆ’Ã‚Â©cor sol
+#Décor sol
 coo1 = 550
 coo2 = 570
-decorsolcoor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # Stock les coordonnÃƒÆ’Ã‚Â©es
+decorsolcoor = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # Stock les coordonnées
 decorsol = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]  # Stock les objets du canvas
 
-# Position du dÃƒÆ’Ã‚Â©cor
+# Position du décor
 pod1 = 450
 pod2 = 500
 pod3 = 490
 pod4 = 460
 
-# DifficultÃƒÆ’Ã‚Â© qui augmente au fur et ÃƒÆ’Ã‚Â  mesure
-dif = 2.5
+# Difficulté qui augmente au fur et à mesure
+dif = 3
 
-# Variable qui dÃƒÆ’Ã‚Â©tecte la fin
+# Variable qui détecte la fin
 finish = False
 
 # Vitesse de saut et hauteur par ailleurs
 inispeed = 8
-speed = 8 #la valeur de speed sera changÃƒÆ’Ã‚Â©e, et on reviendra ÃƒÆ’Ã‚Â  inispeed.
+speed = 8 #la valeur de speed sera changée, et on reviendra à inispeed.
 
-# Variables pour le saut, et l'activiation du dÃƒÆ’Ã‚Â©cor (au clic droit)
+# Variables pour le saut, et l'activiation du décor (au clic droit)
 jumping = 0
-decoractive = False
 
 # Variables a Emilien
 x_objet = 444
 y_objet = 170
-## ces deux variables vont agir dans les coordonnÃƒÆ’Ã‚Â©es de l'obstacle. elles sont lourdes et devrait etre stocke dans une liste
+## ces deux variables vont agir dans les coordonnées de l'obstacle. elles sont lourdes et devrait etre stocke dans une liste
 random_item = 0
 ## me permet de generer un type d'obstacle aleatoirement
 execute = 0
-## me permet de vÃƒÆ’Ã‚Â©rifier que le programme ne s'execute pas deux fois en meme temps.
+## me permet de vérifier que le programme ne s'execute pas deux fois en meme temps.
 
 fenetre = Tk()
 #canvas
 canvas = Canvas(fenetre, width=450, height=200, background='orange')
 #decor
 decor = canvas.create_polygon(pod1, 1, pod2, 1, pod3, 15, pod3, 180, pod4, 180, pod4, 15, fill='orange', outline='black', width='1')
-x = canvas.create_line(coo1, 180, coo2, 190, coo2,205)  # crÃƒÆ’Ã‚Â©ÃƒÆ’Ã‚Â© la 2ÃƒÆ’Ã‚Â¨me ligne du sol
+x = canvas.create_line(coo1, 180, coo2, 190, coo2,205)  # créé la 2ème ligne du sol
 x = (canvas.coords(x))
 #bonhomme
 pnj = canvas.create_oval(pob1, pob2, pob3, pob4,fill='orange')
@@ -88,23 +87,26 @@ def fall():
             speed = inispeed
             jumping -= 1
 
-# #dÃƒÆ’Ã‚Â©placement dÃƒÆ’Ã‚Â©cor
+# #déplacement décor
 def decordef():
-    global decoractive, pod1, pod2, pod3, pod4
-    if decoractive == True:
-        if pod2 > 0:
-            canvas.coords(decor, pod1, 3, pod2, 3, pod3, 15, pod3, 180, pod4, 180, pod4, 15,)
-            pod1,pod2,pod3,pod4 = pod1-dif,pod2-dif,pod3-dif,pod4-dif
-            canvas.after(10, decordef)
-        else:
-            pod1 = 450
-            pod2 = 500
-            pod3 = 490
-            pod4 = 460
-            canvas.after(10, decordef)
+    global pod1, pod2, pod3, pod4
+    if pod2 > 0:
+        canvas.coords(decor, pod1, 3, pod2, 3, pod3, 15, pod3, 180, pod4, 180, pod4, 15,)
+        pod1,pod2,pod3,pod4 = pod1-dif,pod2-dif,pod3-dif,pod4-dif
+        canvas.after(10, decordef)
+    else:
+        pod1 = 450
+        pod2 = 500
+        pod3 = 490
+        pod4 = 460
+        canvas.after(10, decordef)
 
-for y in range(1, 12):  # CrÃƒÆ’Ã‚Â©ation des objets
-    compteur = -1  # le compteur est incrÃƒÆ’Ã‚Â©mentÃƒÆ’Ã‚Â©, et dÃƒÆ’Ã‚Â©fini la position de chaque objet dans les listes
+canvas.after(10,decordef)
+
+# #décor au sol
+
+for y in range(1, 12):  # Création des objets
+    compteur = -1  # le compteur est incrémenté, et défini la position de chaque objet dans les listes
     for i in x:
         compteur += 1
         if x[compteur] not in [1, 3, 5]:  # On ne modifie que les valeurs en x, pas en y
@@ -121,18 +123,18 @@ compteur2 = 0
 
 def move():
     global decorsolcoor, compteur, decorsol, compteur2
-    if compteur2 < 25:  # compteur2 sert ÃƒÆ’Ã‚Â  compter le dÃƒÆ’Ã‚Â©placement des lignes
-        for item in decorsolcoor:  # On utilise decorsol pour les objets, et item pour dÃƒÆ’Ã‚Â©finir les coordonnÃƒÆ’Ã‚Â©es
+    if compteur2 < 25:  # compteur2 sert à compter le déplacement des lignes
+        for item in decorsolcoor:  # On utilise decorsol pour les objets, et item pour définir les coordonnées
             item[0] -= 2
             item[2] -= 2
             item[4] -= 2
             canvas.coords(decorsol[compteur], item[0],
                           180, item[2], 190, item[4], 205)
             compteur += 1
-        compteur = 0  # compteur est incrÃƒÆ’Ã‚Â©mentÃƒÆ’Ã‚Â© de 0 ÃƒÆ’Ã‚Â  10, pour prendre toutes les valeurs de la liste decorsol
+        compteur = 0  # compteur est incrémenté de 0 à 10, pour prendre toutes les valeurs de la liste decorsol
         compteur2 += 1
         canvas.after(10, move)
-    else:  # Si compteur2 arrive ÃƒÆ’Ã‚Â  25, du coup on remet les lignes ÃƒÆ’Ã‚Â  leurs positions initiales.
+    else:  # Si compteur2 arrive à 25, du coup on remet les lignes à leurs positions initiales.
         for item in decorsolcoor:
             item[0] += 50
             item[2] += 50
@@ -144,7 +146,6 @@ def move():
         compteur2 = 0
         canvas.after(10, move)
 
-
 compteur = 0
 canvas.after(10, move)
 
@@ -152,7 +153,7 @@ ligne2 = canvas.create_line(0, 190, 460, 190)
 
 #clics et fonctions
 # #clic gauche (clickl : clickleft)
-def clickl(event):
+def saut(event):
     global jumping, speed
     if jumping == 0:
         jumping += 1
@@ -175,7 +176,7 @@ def doublejump():
 
 def doublefall():
     global jumping, speed, pob2, pob4
-    if (canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]) < (20.0, 135, 70, 185):
+    if (canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]) < (10.0, 135, 60, 185):
     #if (canvas.find_overlapping(10, 135, 60, 185))[1] != 14: # (3,4) not in 4 ?
         canvas.coords(pnj, pob1, pob2, pob3, pob4)
         pob2 += speed
@@ -189,29 +190,13 @@ def doublefall():
         speed = inispeed
         jumping = 0
 
-
-# #clic droit (clickr: clickright)
-def clickr():
-    global decoractive
-    if decoractive == False:
-        decoractive = True
-        decordef()
-    else:
-        decoractive = False
-        decordef()
-
 # # Mise en place des boutons de la souris pour faire les fonctions
-fenetre.bind("<space>", clickl)
-clickr()
+fenetre.bind("<space>", saut)
 
 #bouton
 bouton=Button(fenetre, text="Fermer", command=fenetre.destroy)
 
-# Programme ÃƒÆ’Ã‚Â  Emilien
-
-#sous-programmes
-
-   # print((canvas.find_overlapping(canvas.coords(pnj)[0],canvas.coords(pnj)[1],canvas.coords(pnj)[2],canvas.coords(pnj)[3])))
+# Programme à Emilien
 
 #sous-programmes
 
@@ -224,37 +209,33 @@ def generation():
 
 def random_objet():  # lancement du programme, generation du type d'obstacle
     global random_item
-    random_item = int(random()*22)
-    print(random_item)
+    random_item = int(random()*5)
     new_objet()
 
 
 def new_objet():
     global flag, finish
     if finish == False:
-        if 1<random_item< 5: #x1,y1,x2,y2
-            obstacle.append(canvas.create_line(450, 185, 465, 165))
-            obstacle.append(canvas.create_line(465, 165, 480, 185))
-        if 6<random_item< 10:
-            obstacle.append(canvas.create_line(450, 185, 465, 165))
-            obstacle.append(canvas.create_line(465, 165, 480, 185))
-            obstacle.append(canvas.create_line(480, 185, 495, 165))
-            obstacle.append(canvas.create_line(495, 165, 510, 185))
-        if 11<random_item< 15:
-            obstacle.append(canvas.create_line(450, 185, 465, 165))
-            obstacle.append(canvas.create_line(465, 165, 480, 185))
-            obstacle.append(canvas.create_line(480, 185, 480, 165))
-            obstacle.append(canvas.create_line(480, 165, 500, 165))
-            obstacle.append(canvas.create_line(500, 165, 500, 185))
-        if 16<random_item< 20:
-            obstacle.append(canvas.create_line(480, 165, 490, 150))
-            obstacle.append(canvas.create_line(490, 150, 500, 165))
-            obstacle.append(canvas.create_line(480, 185, 480, 165))
-            obstacle.append(canvas.create_line(480, 165, 500, 165))
-            obstacle.append(canvas.create_line(500, 165, 500, 185))
-        if random_item == 21 :
-            for i in range (30) :
-                obstacle.append(canvas.create_line(500+5*i , 180, 475+5*i, 190))
+        if random_item == 0: #x1,y1,x2,y2
+            obstacle.append(canvas.create_line(210, 150, 217, 140))
+            obstacle.append(canvas.create_line(217, 140, 224, 150))
+        if random_item == 1:
+            obstacle.append(canvas.create_line(210, 150, 217, 140))
+            obstacle.append(canvas.create_line(217, 140, 224, 150))
+            obstacle.append(canvas.create_line(224, 150, 231, 140))
+            obstacle.append(canvas.create_line(231, 140, 238, 150))
+        if random_item == 2:
+            obstacle.append(canvas.create_line(210, 150, 217, 140))
+            obstacle.append(canvas.create_line(217, 140, 224, 150))
+            obstacle.append(canvas.create_line(224, 150, 224, 140))
+            obstacle.append(canvas.create_line(224, 140, 234, 140))
+            obstacle.append(canvas.create_line(234, 140, 234, 150))
+        if random_item == 3:
+            obstacle.append(canvas.create_line(210, 150, 210, 140))
+            obstacle.append(canvas.create_line(210, 140, 220, 140))
+            obstacle.append(canvas.create_line(220, 140, 220, 150))
+            obstacle.append(canvas.create_line(209, 140, 215, 130))
+            obstacle.append(canvas.create_line(215, 130, 221, 140))
         if flag == 0:
             defillement()
             flag = 1
@@ -265,12 +246,12 @@ def defillement():
     if finish == False:
         for objet in obstacle:
             coordonnees = canvas.coords(objet)
-            if coordonnees[2] < -50:
+            if coordonnees[2] < 0:
                 del obstacle[0]
                 objet = 1
             else:
                 canvas.coords(
-                    objet, coordonnees[0]-dif, coordonnees[1], coordonnees[2]-dif, coordonnees[3])
+                    objet, coordonnees[0]-2, coordonnees[1], coordonnees[2]-2, coordonnees[3])
         mort = (canvas.find_overlapping(canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]))
         mortlist = list(mort)
         for i in range(0, 18):
@@ -293,7 +274,7 @@ generation()
 bouton.pack()
 canvas.pack()
 
-#permet de dÃƒÆ’Ã‚Â©finir la position (au-dessous ou au-dessus de l'ÃƒÆ’Ã‚Â©lÃƒÆ’Ã‚Â©ment spÃƒÆ’Ã‚Â©cifiÃƒÆ’Ã‚Â©)
+#permet de définir la position (au-dessous ou au-dessus de l'élément spécifié)
 canvas.tag_raise(pnj, decor)
 canvas.tag_raise(pnj,ligne2)
 
