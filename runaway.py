@@ -49,6 +49,9 @@ speed = 8 #la valeur de speed sera changée, et on reviendra à inispeed.
 # Variables pour le saut, et l'activiation du décor (au clic droit)
 jumping = 0
 
+# Score en fin de jeu
+score = 0
+
 # Variables a Emilien
 x_objet = 444
 y_objet = 170
@@ -129,25 +132,29 @@ def doublejump():
         canvas.after(10, doublefall)
 
 def doublefall():
-    global jumping, speed, pob2, pob4
-    if (canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]) < (20.0, 135, 70, 185):
-        # Ici, on utilisera cette fonction pour détecter si le bonhomme dépasse la ligne. Si oui, on le remettra à ses coordonnées
-        # initiales.
-        canvas.coords(pnj, pob1, pob2, pob3, pob4)
-        pob2 += speed
-        pob4 += speed
-        speed += 0.5
-        canvas.after(10, doublefall)
-    else:
-        pob2 = 135
-        pob4 = 185
-        canvas.coords(pnj, pob1, pob2, pob3, pob4)
-        speed = inispeed
-        jumping = 0
+    global jumping, speed, pob2, pob4, finish
+    # Comme le doublefall dépend des positions du pnj, si le joueur fait une double descente sur un piège il perd
+    # Du coup comme il n'y a plus de coordonnées, cela engendres des soucis. On vérifie si le jeu est fini avec la
+    # variable finish.
+    if finish == False:
+        if (canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]) < (20.0, 135, 70, 185):
+            # Ici, on utilisera cette fonction pour détecter si le bonhomme dépasse la ligne. Si oui, on le remettra à ses coordonnées
+            # initiales.
+            canvas.coords(pnj, pob1, pob2, pob3, pob4)
+            pob2 += speed
+            pob4 += speed
+            speed += 0.5
+            canvas.after(10, doublefall)
+        else:
+            pob2 = 135
+            pob4 = 185
+            canvas.coords(pnj, pob1, pob2, pob3, pob4)
+            speed = inispeed
+            jumping = 0
 
 # #déplacement décor du pilier
 def decordef():
-    global pod1, pod2, pod3, pod4
+    global pod1, pod2, pod3, pod4, score
     if pod2 > 0:
         canvas.coords(decor, pod1, 3, pod2, 3, pod3, 15, pod3, 180, pod4, 180, pod4, 15,)
         pod1,pod2,pod3,pod4 = pod1-dif,pod2-dif,pod3-dif,pod4-dif #On fait évoluer le pilier en fonction de la variable "dif"
@@ -157,6 +164,8 @@ def decordef():
         pod2 = 500
         pod3 = 490
         pod4 = 460
+        # En même temps, c'est ici qu'on augmentera le score. (On aurait pu le mettre autrepart)
+        score += 100
         canvas.after(10, decordef)
 
 for y in range(1, 12):  # Création des objets
@@ -172,7 +181,7 @@ for y in range(1, 12):  # Création des objets
 
 decorsol[0] = [coo1, 180, coo2, 190, coo2, 205] #Comme on a fait "for y in range (1,12)", le 1er élément de la liste n'est pas défini.
 decorsolcoor[0] = [coo1, 180, coo2, 190, coo2, 205] # Du coup on le fait manuellement pour decorsol et decorsolcoor
-
+ 
 def move():
     global decorsolcoor, compteur, decorsol, compteur2
     if compteur2 < 25:  # compteur2 sert à compter le déplacement des lignes
@@ -191,8 +200,7 @@ def move():
             item[0] += 50
             item[2] += 50
             item[4] += 50
-            canvas.coords(decorsol[compteur], item[0],
-                          180, item[2], 190, item[4], 205)
+            canvas.coords(decorsol[compteur], item[0],180, item[2], 190, item[4], 205)
             compteur += 1
         compteur = 0
         compteur2 = 0
@@ -268,16 +276,22 @@ def defillement():
             else:
                 canvas.coords(
                     objet, coordonnees[0]-dif, coordonnees[1], coordonnees[2]-dif, coordonnees[3])
+        # On regarde si les pièges touche le personnage grâce à find_overlapping, qui détecte les élements qui se touchent entre eux.
         mort = (canvas.find_overlapping(canvas.coords(pnj)[0], canvas.coords(pnj)[1], canvas.coords(pnj)[2], canvas.coords(pnj)[3]))
         mortlist = list(mort)
         for i in range(0, 18):
             if i in mortlist:
-                mortlist.remove(i)
-        if len(mortlist) != 0:
-            finish = True
-            canvas.delete("all")
+                mortlist.remove(i) # On enlève tous les éléments susceptibles de toucher le personnage, hors pièges.
+        if len(mortlist) != 0:   # On regarde, après avoir enlever tous les éléments si la il y en a encore dans la liste, si oui:
+            finish = True        # cela veut dire que la liste contient des pièges, donc que le joueur touche un piège.
+            canvas.delete("all") # Du coup on met en place la manoeuvre de fin.
+            fin()
         else:
             fenetre.after(10, defillement)
+
+def fin():
+    fenetre.destroy()
+    print ("Votre score est de",score,"points.")
 
 ########
 # main #
