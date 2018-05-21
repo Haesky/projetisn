@@ -67,7 +67,7 @@ def defilement () :
 def test_mort ():
     global x_perso, x_objet, mort, score
     if x_perso < x_objet - 20 or x_perso > x_objet + 20: ## si le personnage ne se trouve pas dans l'ouverture des deux lignes
-        print("vortre score :") ## informe le joueur de son score, puis le supprime
+        print("votre score :") ## informe le joueur de son score, puis le supprime
         print(score)
         score = 0
         mort = 1
